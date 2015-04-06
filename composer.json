@@ -13,6 +13,9 @@
       "Managlea\\Component\\": "src/"
     }
   },
+  "require": {
+    "doctrine/orm": "*"
+  },
   "require-dev": {
     "codeclimate/php-test-reporter": "dev-master"
   }

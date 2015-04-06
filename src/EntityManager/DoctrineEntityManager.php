@@ -3,9 +3,10 @@
 namespace Managlea\Component\EntityManager;
 
 
+use Doctrine\ORM\EntityManager;
 use Managlea\Component\EntityManagerInterface;
 
-class DoctrineEntityManager implements EntityManagerInterface
+class DoctrineEntityManager extends EntityManager implements EntityManagerInterface
 {
     //
 }
