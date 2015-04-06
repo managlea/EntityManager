@@ -1,0 +1,19 @@
+{
+  "name": "managlea/entity-manager",
+  "description": "",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kauri Kont-Kontson"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Managlea\\Component\\": "src/"
+    }
+  },
+  "require-dev": {
+    "codeclimate/php-test-reporter": "dev-master"
+  }
+}
