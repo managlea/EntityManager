@@ -5,11 +5,13 @@ namespace Managlea\Component;
 
 interface EntityManagerInterface
 {
-    public function getRepository();
+    public function findEntity($entity, $resourceId);
     
-    public function persist();
+    public function findEntityCollection($entity, array $filters = array());
     
-    public function remove();
+    public function createEntity(array $data);
+
+    public function updateEntity($resourceId, array $data);
     
-    public function flush();
+    public function removeEntity($resourceId);
 }

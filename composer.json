@@ -13,6 +13,11 @@
       "Managlea\\Component\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Managlea\\Tests\\": "Tests/"
+    }
+  },
   "require": {
     "doctrine/orm": "*"
   },
