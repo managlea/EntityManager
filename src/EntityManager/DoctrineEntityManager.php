@@ -56,10 +56,8 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
         return $entity;
     }
 
-    public function findEntityCollection($entity, array $filters = array())
+    public function findEntityCollection($entity, array $filters = array(), $limit = 20, $offset = 0)
     {
-        $limit = 20;
-        $offset = 0;
         $repository = $this->getRepository($entity);
         if (!($repository instanceof EntityRepository)) {
             throw new \Exception('Repository not found');
