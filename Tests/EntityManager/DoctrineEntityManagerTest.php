@@ -110,7 +110,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
         $noOfProducts = count($products);
 
         // Get random offset
-        $productOffset = rand(0, $noOfProducts);
+        $productOffset = rand(0, $noOfProducts - 1);
         $product = $products[$productOffset];
 
         // Set filter based on random object
@@ -143,7 +143,8 @@ class DoctrineEntityManagerTest extends BaseTestCase
             'name' => 'ASC'
         );
 
-        $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', array(), 1, null, $order);
+        $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', array(), 1, null,
+            $order);
         $result = current($collection);
         $this->assertEquals($result->getName(), $ordered[0]);
     }
@@ -165,9 +166,23 @@ class DoctrineEntityManagerTest extends BaseTestCase
             'name' => 'DESC'
         );
 
-        $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', array(), 1, null, $order);
+        $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', array(), 1, null,
+            $order);
         $result = current($collection);
+
         $this->assertEquals($result->getName(), $ordered[0]);
     }
 
+    /**
+     * @test
+     */
+    public function testCreateEntity()
+    {
+        $data = array(
+            'name' => uniqid()
+        );
+
+        $entity = $this->entityManager->createEntity('Managlea\Tests\Models\Product', $data);
+        $this->assertEquals($entity->getName(), $data['name']);
+    }
 }

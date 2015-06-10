@@ -39,7 +39,15 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
                 throw new \InvalidArgumentException("Invalid argument: " . $conn);
         }
 
-        return new DoctrineEntityManager($conn, $config, $conn->getEventManager());
+        $entityManager = new self($conn, $config, $conn->getEventManager());
+        $entityManager->setFormFactory();
+
+        return $entityManager;
+    }
+
+    private function setFormFactory()
+    {
+        //
     }
 
     /**
@@ -82,9 +90,15 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
         return $collection;
     }
 
-    public function createEntity(array $data)
+    public function createEntity($entity, array $data)
     {
-        throw new \Exception('Method not implemented');
+        $detachedEntity = $this->convert($entity, $data);
+
+        $entity = $this->merge($detachedEntity);
+        $this->persist($entity);
+        $this->flush();
+
+        return $entity;
     }
 
     public function updateEntity($resourceId, array $data)
@@ -94,6 +108,20 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
 
     public function removeEntity($resourceId)
     {
-        throw new \Exception('Method not implemented');
+        //$this->remove($user);
+        //$this->flush();
+    }
+
+    private function convert($entity, array $data)
+    {
+        $detachedEntity = new $entity;
+        foreach ($data as $field => $value) {
+            $method = 'set' . ucfirst($field);
+            if (method_exists($detachedEntity, $method)) {
+                $detachedEntity->$method($value);
+            }
+        }
+
+        return $detachedEntity;
     }
 }
