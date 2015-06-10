@@ -178,11 +178,11 @@ class DoctrineEntityManagerTest extends BaseTestCase
      */
     public function testCreateEntity()
     {
-        $data = array(
-            'name' => uniqid()
-        );
-
+        $data = array('name' => uniqid());
         $entity = $this->entityManager->createEntity('Managlea\Tests\Models\Product', $data);
         $this->assertEquals($entity->getName(), $data['name']);
+
+        $product = $this->entityManager->findEntity('Managlea\Tests\Models\Product', $entity->getId());
+        $this->assertEquals($product->getName(), $entity->getName());
     }
 }

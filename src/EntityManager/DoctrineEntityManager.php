@@ -92,7 +92,7 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
 
     public function createEntity($entity, array $data)
     {
-        $detachedEntity = $this->convert($entity, $data);
+        $detachedEntity = $this->createDetachedEntity($entity, $data);
 
         $entity = $this->merge($detachedEntity);
         $this->persist($entity);
@@ -108,11 +108,15 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
 
     public function removeEntity($resourceId)
     {
-        //$this->remove($user);
-        //$this->flush();
+        throw new \Exception('Method not implemented');
     }
 
-    private function convert($entity, array $data)
+    /**
+     * @param string $entity
+     * @param array $data
+     * @return mixed
+     */
+    public function createDetachedEntity($entity, array $data)
     {
         $detachedEntity = new $entity;
         foreach ($data as $field => $value) {
