@@ -42,6 +42,12 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
         return new DoctrineEntityManager($conn, $config, $conn->getEventManager());
     }
 
+    /**
+     * @param $entity
+     * @param int $resourceId
+     * @return bool|null|object
+     * @throws \Exception
+     */
     public function findEntity($entity, $resourceId)
     {
         $repository = $this->getRepository($entity);
@@ -56,13 +62,22 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
         return $entity;
     }
 
-    public function findEntityCollection($entity, array $filters = array(), $limit = 20, $offset = 0)
+    /**
+     * @param $entity
+     * @param array $filters
+     * @param int $limit
+     * @param int $offset
+     * @param array $order
+     * @return array
+     * @throws \Exception
+     */
+    public function findEntityCollection($entity, array $filters = array(), $limit = 20, $offset = 0, $order = null)
     {
         $repository = $this->getRepository($entity);
         if (!($repository instanceof EntityRepository)) {
             throw new \Exception('Repository not found');
         }
-        $collection = $repository->findBy($filters, null, $limit, $offset);
+        $collection = $repository->findBy($filters, $order, $limit, $offset);
 
         return $collection;
     }

@@ -48,11 +48,24 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     protected function createProduct()
     {
         $product = new Product();
-        $product->setName(uniqid());
+        $product->setName(rand(1, 9) . uniqid());
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();
 
         return $product;
+    }
+
+    protected function createProductsCollection($min = 25, $max = 35)
+    {
+        $noOfProducts = rand($min, $max);
+
+        // Generate random objects
+        $products = array();
+        for ($i = 1; $i <= $noOfProducts; $i++) {
+            $products[] = $this->createProduct();
+        }
+
+        return $products;
     }
 }
