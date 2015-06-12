@@ -129,41 +129,20 @@ class DoctrineEntityManagerTest extends BaseTestCase
     /**
      * @test
      */
-    public function findEntityCollectionOrderASC()
+    public function findEntityCollectionOrder()
     {
-        $products = $this->createProductsCollection();
+        $orderTypes = array('ASC' => 'sort', 'DESC' => 'rsort');
+        foreach($orderTypes as $orderType => $sortMethod){
+            $products = $this->createProductsCollection();
         $ordered = array();
 
         foreach ($products as $product) {
             $ordered[] = $product->getName();
         }
 
-        sort($ordered);
+        $sortMethod($ordered);
         $order = array(
-            'name' => 'ASC'
-        );
-
-        $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', array(), 1, null,
-            $order);
-        $result = current($collection);
-        $this->assertEquals($result->getName(), $ordered[0]);
-    }
-
-    /**
-     * @test
-     */
-    public function findEntityCollectionOrderDESC()
-    {
-        $products = $this->createProductsCollection();
-        $ordered = array();
-
-        foreach ($products as $product) {
-            $ordered[] = $product->getName();
-        }
-
-        rsort($ordered);
-        $order = array(
-            'name' => 'DESC'
+            'name' => $orderType
         );
 
         $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', array(), 1, null,
@@ -171,6 +150,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
         $result = current($collection);
 
         $this->assertEquals($result->getName(), $ordered[0]);
+        }
     }
 
     /**
