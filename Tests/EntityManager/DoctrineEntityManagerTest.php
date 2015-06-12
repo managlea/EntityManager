@@ -132,24 +132,24 @@ class DoctrineEntityManagerTest extends BaseTestCase
     public function findEntityCollectionOrder()
     {
         $orderTypes = array('ASC' => 'sort', 'DESC' => 'rsort');
-        foreach($orderTypes as $orderType => $sortMethod){
+        foreach ($orderTypes as $orderType => $sortMethod) {
             $products = $this->createProductsCollection();
-        $ordered = array();
+            $ordered = array();
 
-        foreach ($products as $product) {
-            $ordered[] = $product->getName();
-        }
+            foreach ($products as $product) {
+                $ordered[] = $product->getName();
+            }
 
-        $sortMethod($ordered);
-        $order = array(
-            'name' => $orderType
-        );
+            $sortMethod($ordered);
+            $order = array(
+                'name' => $orderType
+            );
 
-        $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', array(), 1, null,
-            $order);
-        $result = current($collection);
+            $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', array(), 1, null,
+                $order);
+            $result = current($collection);
 
-        $this->assertEquals($result->getName(), $ordered[0]);
+            $this->assertEquals($result->getName(), $ordered[0]);
         }
     }
 

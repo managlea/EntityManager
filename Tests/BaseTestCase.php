@@ -3,6 +3,7 @@
 namespace Managlea\Tests;
 
 
+use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Managlea\Component\EntityManager\DoctrineEntityManager;
 use Managlea\Tests\Models\Product;
@@ -13,6 +14,13 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
      * @var DoctrineEntityManager
      */
     protected $entityManager;
+
+    /**
+     * @var SchemaTool
+     */
+    protected $schemaTool;
+
+    const SCHEMA_PRODUCT = 'Managlea\Tests\Models\Product';
 
     public function setUp()
     {
@@ -29,17 +37,24 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
         $this->entityManager = DoctrineEntityManager::create($dbParams, $config);
 
-        $this->truncateDB();
+        $this->schemaTool = new SchemaTool($this->entityManager);
+
+        $this->schemaTool->dropSchema($this->getSchemaClasses());
+        $this->schemaTool->createSchema($this->getSchemaClasses());
     }
 
     public function tearDown()
     {
-        $this->truncateDB();
+        $this->schemaTool->dropSchema($this->getSchemaClasses());
     }
 
-    protected function truncateDB()
+    private function getSchemaClasses()
     {
-        $this->entityManager->getConnection()->executeQuery("TRUNCATE product");
+        $classes = array(
+            $this->entityManager->getClassMetadata(self::SCHEMA_PRODUCT)
+        );
+
+        return $classes;
     }
 
     /**
