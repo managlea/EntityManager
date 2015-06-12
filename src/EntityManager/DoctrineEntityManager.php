@@ -40,14 +40,8 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
         }
 
         $entityManager = new self($conn, $config, $conn->getEventManager());
-        $entityManager->setFormFactory();
 
         return $entityManager;
-    }
-
-    private function setFormFactory()
-    {
-        //
     }
 
     /**
