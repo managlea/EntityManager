@@ -31,7 +31,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
      */
     public function findEntityNoEntity()
     {
-        $entity = $this->entityManager->findEntity('Managlea\Tests\Models\Product', -1);
+        $entity = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, -1);
 
         $this->assertEquals(false, $entity);
     }
@@ -42,7 +42,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
     public function findEntitySuccess()
     {
         $product = $this->createProduct();
-        $entity = $this->entityManager->findEntity('Managlea\Tests\Models\Product', $product->getId());
+        $entity = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, $product->getId());
 
         $this->assertEquals($product->getName(), $entity->getName());
     }
@@ -61,7 +61,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
      */
     public function findEntityCollectionNoEntities()
     {
-        $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product');
+        $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT);
 
         $this->assertEquals(0, count($collection));
     }
@@ -82,7 +82,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
 
         for ($i = 1; $i <= $iterations; $i++) {
             $offset = ($i > 1) ? ($i - 1) * $limit : 0;
-            $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', array(), $limit,
+            $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, array(), $limit,
                 $offset);
 
             $first = current($collection);
@@ -103,7 +103,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
         $filters = array(
             'name' => 'random'
         );
-        $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', $filters, 1, 0);
+        $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, $filters, 1, 0);
         $this->assertEquals(0, count($collection));
 
         $products = $this->createProductsCollection();
@@ -118,7 +118,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
             'name' => $product->getName()
         );
 
-        $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', $filters, 10, 0);
+        $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, $filters, 10, 0);
         $this->assertEquals(1, count($collection));
 
         $result = current($collection);
@@ -145,7 +145,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
                 'name' => $orderType
             );
 
-            $collection = $this->entityManager->findEntityCollection('Managlea\Tests\Models\Product', array(), 1, null,
+            $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, array(), 1, null,
                 $order);
             $result = current($collection);
 
@@ -156,13 +156,46 @@ class DoctrineEntityManagerTest extends BaseTestCase
     /**
      * @test
      */
-    public function testCreateEntity()
+    public function createEntity()
     {
         $data = array('name' => uniqid());
-        $entity = $this->entityManager->createEntity('Managlea\Tests\Models\Product', $data);
+        $entity = $this->entityManager->createEntity(self::SCHEMA_PRODUCT, $data);
         $this->assertEquals($entity->getName(), $data['name']);
 
-        $product = $this->entityManager->findEntity('Managlea\Tests\Models\Product', $entity->getId());
+        $product = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, $entity->getId());
         $this->assertEquals($product->getName(), $entity->getName());
+    }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     */
+    public function updateEntity()
+    {
+        $this->entityManager->updateEntity(1, array());
+    }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     */
+    public function removeEntity()
+    {
+        $this->entityManager->removeEntity(1);
+    }
+
+    /**
+     * @test
+     */
+    public function createDetachedEntity()
+    {
+        $data = array(
+            'namE' => 'foo',
+            'dAte_of_bIrth' => "bar"
+        );
+
+        $entity = $this->entityManager->createDetachedEntity(self::SCHEMA_PRODUCT, $data);
+        $this->assertEquals($data['namE'], $entity->getName());
+        $this->assertEquals($data['dAte_of_bIrth'], $entity->getDateOfBirth());
     }
 }

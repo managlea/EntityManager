@@ -5,7 +5,6 @@ namespace Managlea\Component\EntityManager;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Configuration;
 use Doctrine\Common\EventManager;
@@ -53,9 +52,6 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
     public function findEntity($entity, $resourceId)
     {
         $repository = $this->getRepository($entity);
-        if (!($repository instanceof EntityRepository)) {
-            throw new \Exception('Repository not found');
-        }
         $entity = $repository->find($resourceId);
         if (!$entity) {
             return false;
@@ -76,9 +72,6 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
     public function findEntityCollection($entity, array $filters = array(), $limit = 20, $offset = 0, $order = null)
     {
         $repository = $this->getRepository($entity);
-        if (!($repository instanceof EntityRepository)) {
-            throw new \Exception('Repository not found');
-        }
         $collection = $repository->findBy($filters, $order, $limit, $offset);
 
         return $collection;
@@ -114,12 +107,19 @@ class DoctrineEntityManager extends EntityManager implements EntityManagerInterf
     {
         $detachedEntity = new $entity;
         foreach ($data as $field => $value) {
-            $method = 'set' . ucfirst($field);
+            $method = 'set' . $this->formatInputToMethodName($field);
             if (method_exists($detachedEntity, $method)) {
                 $detachedEntity->$method($value);
             }
         }
 
         return $detachedEntity;
+    }
+
+    private function formatInputToMethodName($input)
+    {
+        $methodName = implode('', array_map('ucfirst', explode('_', strtolower($input))));
+
+        return $methodName;
     }
 }
