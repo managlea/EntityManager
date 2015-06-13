@@ -35,7 +35,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         );
 
         $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-        $this->entityManager = DoctrineEntityManager::createManager($dbParams, $config);
+        $this->entityManager = DoctrineEntityManager::initialize($dbParams, $config);
 
         $this->schemaTool = new SchemaTool($this->entityManager);
 

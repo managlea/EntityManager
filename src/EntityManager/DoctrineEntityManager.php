@@ -13,7 +13,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     /**
      * {@inheritDoc}
      */
-    public static function createManager($conn, Configuration $config, EventManager $eventManager = null)
+    public static function initialize($conn, Configuration $config, EventManager $eventManager = null)
     {
         return new self(\Doctrine\ORM\EntityManager::create($conn, $config, $eventManager));
     }
@@ -129,7 +129,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     public static function updateEntityFromArray($entity, array $data)
     {
         foreach ($data as $field => $value) {
-            $method = 'set' . self::formatInputToMethodName($field);
+            $method = 'set' . self::formatStringToMethodName($field);
             if (method_exists($entity, $method)) {
                 $entity->$method($value);
             }
@@ -143,7 +143,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
      * @param string $input
      * @return string
      */
-    public static function formatInputToMethodName($input)
+    public static function formatStringToMethodName($input)
     {
         $methodName = implode('', array_map('ucfirst', explode('_', strtolower($input))));
 
