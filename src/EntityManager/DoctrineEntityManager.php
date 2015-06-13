@@ -71,17 +71,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
      */
     public function updateEntity($entity, $resourceId, array $data)
     {
-        $entityObject = $this->findEntity($entity, $resourceId);
-
-        if (!$entityObject) {
-            return false;
-        }
-
-        self::updateEntityFromData($entityObject, $data);
-
-        $this->flush();
-
-        return $entityObject;
+        return $this->executeActionOnEntity('update', $entity, $resourceId, $data);
     }
 
     /**
@@ -91,14 +81,35 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
      */
     public function removeEntity($entity, $resourceId)
     {
+        return $this->executeActionOnEntity('remove', $entity, $resourceId);
+    }
+
+    /**
+     * @param string $method
+     * @param string $entity
+     * @param int $resourceId
+     * @param array $data
+     * @return bool
+     */
+    private function executeActionOnEntity($method, $entity, $resourceId, array $data = null)
+    {
         $entityObject = $this->findEntity($entity, $resourceId);
 
         if (!$entityObject) {
             return false;
         }
 
-        $this->remove($entityObject);
+        if ($method == 'update') {
+            self::updateEntityFromArray($entityObject, $data);
+        } elseif ($method == 'remove') {
+            $this->remove($entityObject);
+        }
+
         $this->flush();
+
+        if ($method == 'update') {
+            return $entityObject;
+        }
 
         return true;
     }
@@ -112,7 +123,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     {
         $detachedEntity = new $entity;
 
-        self::updateEntityFromData($detachedEntity, $data);
+        self::updateEntityFromArray($detachedEntity, $data);
 
         return $detachedEntity;
     }
@@ -122,7 +133,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
      * @param array $data
      * @return mixed
      */
-    public static function updateEntityFromData($entity, array $data)
+    public static function updateEntityFromArray($entity, array $data)
     {
         foreach ($data as $field => $value) {
             $method = 'set' . self::formatInputToMethodName($field);

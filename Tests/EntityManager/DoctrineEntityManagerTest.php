@@ -195,7 +195,8 @@ class DoctrineEntityManagerTest extends BaseTestCase
          * Update the name
          */
         $newName = uniqid();
-        $this->entityManager->updateEntity(self::SCHEMA_PRODUCT, $product->getId(), array('name' => $newName));
+        $entity = $this->entityManager->updateEntity(self::SCHEMA_PRODUCT, $product->getId(), array('name' => $newName));
+        $this->assertEquals($newName, $entity->getName());
 
         /**
          * Search for original name
