@@ -67,7 +67,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
      * @param string $entity
      * @param int $resourceId
      * @param array $data
-     * @return bool
+     * @return mixed
      */
     public function updateEntity($entity, $resourceId, array $data)
     {
@@ -81,7 +81,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
      */
     public function removeEntity($entity, $resourceId)
     {
-        return $this->executeActionOnEntity('remove', $entity, $resourceId);
+        return (bool)$this->executeActionOnEntity('remove', $entity, $resourceId);
     }
 
     /**
@@ -89,7 +89,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
      * @param string $entity
      * @param int $resourceId
      * @param array $data
-     * @return bool
+     * @return mixed
      */
     private function executeActionOnEntity($method, $entity, $resourceId, array $data = null)
     {
@@ -99,7 +99,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
             return false;
         }
 
-        if ($method == 'update') {
+        if ($method == 'update' && is_array($data)) {
             self::updateEntityFromArray($entityObject, $data);
         } elseif ($method == 'remove') {
             $this->remove($entityObject);
