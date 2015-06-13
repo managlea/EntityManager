@@ -9,40 +9,40 @@ namespace Managlea\Component;
 interface EntityManagerInterface
 {
     /**
-     * @param string $entity
-     * @param int $resourceId
+     * @param string $objectName
+     * @param int $id The identifier.
      * @return mixed
      */
-    public function findEntity($entity, $resourceId);
+    public function get($objectName, $id);
 
     /**
-     * @param string $entity
+     * @param string $objectName
      * @param array $filters
      * @param int $limit
      * @param int $offset
      * @return mixed
      */
-    public function findEntityCollection($entity, array $filters = array(), $limit = 20, $offset = 0);
+    public function getCollection($objectName, array $filters = array(), $limit = 20, $offset = 0);
 
     /**
-     * @param string $entity
+     * @param string $objectName
      * @param array $data
      * @return mixed
      */
-    public function createEntity($entity, array $data);
+    public function create($objectName, array $data);
 
     /**
-     * @param string $entity
-     * @param int $resourceId
+     * @param string $objectName
+     * @param int $id The identifier.
      * @param array $data
      * @return mixed
      */
-    public function updateEntity($entity, $resourceId, array $data);
+    public function update($objectName, $id, array $data);
 
     /**
-     * @param string $entity
-     * @param int $resourceId
+     * @param string $objectName
+     * @param int $id The identifier.
      * @return bool
      */
-    public function removeEntity($entity, $resourceId);
+    public function delete($objectName, $id);
 }

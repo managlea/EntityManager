@@ -13,48 +13,42 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     /**
      * {@inheritDoc}
      */
-    public static function create($conn, Configuration $config, EventManager $eventManager = null)
+    public static function createManager($conn, Configuration $config, EventManager $eventManager = null)
     {
         return new self(\Doctrine\ORM\EntityManager::create($conn, $config, $eventManager));
     }
 
     /**
-     * @param $entity
-     * @param int $resourceId
-     * @return bool|null|object
-     * @throws \Exception
+     * {@inheritDoc}
      */
-    public function findEntity($entity, $resourceId)
+    public function get($objectName, $id)
     {
-        $repository = $this->getRepository($entity);
-        $entity = $repository->find($resourceId);
-        if (!$entity) {
+        $repository = $this->getRepository($objectName);
+        $objectName = $repository->find($id);
+        if (!$objectName) {
             return false;
         }
 
-        return $entity;
+        return $objectName;
     }
 
     /**
-     * @param $entity
-     * @param array $filters
-     * @param int $limit
-     * @param int $offset
-     * @param array $order
-     * @return array
-     * @throws \Exception
+     * {@inheritDoc}
      */
-    public function findEntityCollection($entity, array $filters = array(), $limit = 20, $offset = 0, $order = null)
+    public function getCollection($objectName, array $filters = array(), $limit = 20, $offset = 0, $order = null)
     {
-        $repository = $this->getRepository($entity);
+        $repository = $this->getRepository($objectName);
         $collection = $repository->findBy($filters, $order, $limit, $offset);
 
         return $collection;
     }
 
-    public function createEntity($entity, array $data)
+    /**
+     * {@inheritDoc}
+     */
+    public function create($objectName, array $data)
     {
-        $detachedEntity = $this->createDetachedEntity($entity, $data);
+        $detachedEntity = self::createDetachedEntity($objectName, $data);
 
         $entity = $this->merge($detachedEntity);
         $this->persist($entity);
@@ -64,36 +58,31 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     }
 
     /**
-     * @param string $entity
-     * @param int $resourceId
-     * @param array $data
-     * @return mixed
+     * {@inheritDoc}
      */
-    public function updateEntity($entity, $resourceId, array $data)
+    public function update($objectName, $id, array $data)
     {
-        return $this->executeActionOnEntity('update', $entity, $resourceId, $data);
+        return $this->executeActionOnEntity('update', $objectName, $id, $data);
     }
 
     /**
-     * @param string $entity
-     * @param int $resourceId
-     * @return bool
+     * {@inheritDoc}
      */
-    public function removeEntity($entity, $resourceId)
+    public function delete($objectName, $id)
     {
-        return (bool)$this->executeActionOnEntity('remove', $entity, $resourceId);
+        return (bool)$this->executeActionOnEntity('remove', $objectName, $id);
     }
 
     /**
      * @param string $method
-     * @param string $entity
-     * @param int $resourceId
+     * @param string $objectName
+     * @param int $id
      * @param array $data
      * @return mixed
      */
-    private function executeActionOnEntity($method, $entity, $resourceId, array $data = null)
+    private function executeActionOnEntity($method, $objectName, $id, array $data = null)
     {
-        $entityObject = $this->findEntity($entity, $resourceId);
+        $entityObject = $this->get($objectName, $id);
 
         if (!$entityObject) {
             return false;
@@ -115,13 +104,15 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     }
 
     /**
-     * @param string $entity
+     * Creates new entity based on object name sets object
+     * parameter from data
+     * @param string $objectName
      * @param array $data
      * @return mixed
      */
-    public function createDetachedEntity($entity, array $data)
+    public static function createDetachedEntity($objectName, array $data)
     {
-        $detachedEntity = new $entity;
+        $detachedEntity = new $objectName;
 
         self::updateEntityFromArray($detachedEntity, $data);
 
@@ -129,6 +120,8 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     }
 
     /**
+     * Updates Entity from data calling setters based
+     * on data keys
      * @param object $entity
      * @param array $data
      * @return mixed
@@ -146,6 +139,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     }
 
     /**
+     * Generates camel-case method names from string
      * @param string $input
      * @return string
      */

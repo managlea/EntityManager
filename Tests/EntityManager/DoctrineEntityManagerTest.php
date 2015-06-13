@@ -3,9 +3,14 @@
 namespace Managlea\Tests\EntityManager;
 
 
+use Managlea\Component\EntityManager\DoctrineEntityManager;
 use Managlea\Component\EntityManagerInterface;
 use Managlea\Tests\BaseTestCase;
 
+/**
+ * Class DoctrineEntityManagerTest
+ * @package Managlea\Tests\EntityManager
+ */
 class DoctrineEntityManagerTest extends BaseTestCase
 {
     /**
@@ -20,29 +25,28 @@ class DoctrineEntityManagerTest extends BaseTestCase
      * @test
      * @expectedException \Exception
      */
-    public function findEntityException()
+    public function getException()
     {
         $product = $this->createProduct();
-        $this->entityManager->findEntity('foo', $product->getId());
+        $this->entityManager->get('foo', $product->getId());
     }
 
     /**
      * @test
      */
-    public function findEntityNoEntity()
+    public function getNoEntity()
     {
-        $entity = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, -1);
-
+        $entity = $this->entityManager->get(self::SCHEMA_PRODUCT, -1);
         $this->assertEquals(false, $entity);
     }
 
     /**
      * @test
      */
-    public function findEntitySuccess()
+    public function getSuccess()
     {
         $product = $this->createProduct();
-        $entity = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, $product->getId());
+        $entity = $this->entityManager->get(self::SCHEMA_PRODUCT, $product->getId());
 
         $this->assertEquals($product->getName(), $entity->getName());
     }
@@ -51,18 +55,17 @@ class DoctrineEntityManagerTest extends BaseTestCase
      * @test
      * @expectedException \Exception
      */
-    public function findEntityCollectionException()
+    public function getCollectionException()
     {
-        $this->entityManager->findEntityCollection('foo');
+        $this->entityManager->getCollection('foo');
     }
 
     /**
      * @test
      */
-    public function findEntityCollectionNoEntities()
+    public function getCollectionNoEntities()
     {
-        $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT);
-
+        $collection = $this->entityManager->getCollection(self::SCHEMA_PRODUCT);
         $this->assertEquals(0, count($collection));
     }
 
@@ -72,7 +75,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
      * Will generate new objects, save them into DB and later
      * try to retrieve them by using offset and limit
      */
-    public function findEntityCollectionSuccess()
+    public function getCollectionSuccess()
     {
         $products = $this->createProductsCollection();
         $noOfProducts = count($products);
@@ -82,7 +85,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
 
         for ($i = 1; $i <= $iterations; $i++) {
             $offset = ($i > 1) ? ($i - 1) * $limit : 0;
-            $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, array(), $limit,
+            $collection = $this->entityManager->getCollection(self::SCHEMA_PRODUCT, array(), $limit,
                 $offset);
 
             $first = current($collection);
@@ -98,12 +101,12 @@ class DoctrineEntityManagerTest extends BaseTestCase
     /**
      * @test
      */
-    public function findEntityCollectionFilters()
+    public function getCollectionFilters()
     {
         $filters = array(
             'name' => 'random'
         );
-        $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, $filters, 1, 0);
+        $collection = $this->entityManager->getCollection(self::SCHEMA_PRODUCT, $filters, 1, 0);
         $this->assertEquals(0, count($collection));
 
         $products = $this->createProductsCollection();
@@ -118,7 +121,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
             'name' => $product->getName()
         );
 
-        $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, $filters, 10, 0);
+        $collection = $this->entityManager->getCollection(self::SCHEMA_PRODUCT, $filters, 10, 0);
         $this->assertEquals(1, count($collection));
 
         $result = current($collection);
@@ -129,7 +132,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
     /**
      * @test
      */
-    public function findEntityCollectionOrder()
+    public function getCollectionOrder()
     {
         $orderTypes = array('ASC' => 'sort', 'DESC' => 'rsort');
         foreach ($orderTypes as $orderType => $sortMethod) {
@@ -145,7 +148,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
                 'name' => $orderType
             );
 
-            $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, array(), 1, null,
+            $collection = $this->entityManager->getCollection(self::SCHEMA_PRODUCT, array(), 1, null,
                 $order);
             $result = current($collection);
 
@@ -156,25 +159,25 @@ class DoctrineEntityManagerTest extends BaseTestCase
     /**
      * @test
      */
-    public function createEntity()
+    public function create()
     {
         $data = array('name' => uniqid());
-        $entity = $this->entityManager->createEntity(self::SCHEMA_PRODUCT, $data);
+        $entity = $this->entityManager->create(self::SCHEMA_PRODUCT, $data);
         $this->assertEquals($entity->getName(), $data['name']);
 
-        $product = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, $entity->getId());
+        $product = $this->entityManager->get(self::SCHEMA_PRODUCT, $entity->getId());
         $this->assertEquals($product->getName(), $entity->getName());
     }
 
     /**
      * @test
      */
-    public function updateEntity()
+    public function update()
     {
         /**
          * Update entity which does not exist
          */
-        $updateResult = $this->entityManager->updateEntity(self::SCHEMA_PRODUCT, 1, array());
+        $updateResult = $this->entityManager->update(self::SCHEMA_PRODUCT, 1, array());
         $this->assertFalse($updateResult);
 
         /**
@@ -188,49 +191,50 @@ class DoctrineEntityManagerTest extends BaseTestCase
         $filters = array(
             'name' => $product->getName()
         );
-        $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, $filters);
+        $collection = $this->entityManager->getCollection(self::SCHEMA_PRODUCT, $filters);
         $this->assertTrue(count($collection) == 1);
 
         /**
          * Update the name
          */
         $newName = uniqid();
-        $entity = $this->entityManager->updateEntity(self::SCHEMA_PRODUCT, $product->getId(), array('name' => $newName));
+        $entity = $this->entityManager->update(self::SCHEMA_PRODUCT, $product->getId(),
+            array('name' => $newName));
         $this->assertEquals($newName, $entity->getName());
 
         /**
          * Search for original name
          */
-        $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, $filters);
+        $collection = $this->entityManager->getCollection(self::SCHEMA_PRODUCT, $filters);
         $this->assertTrue(count($collection) == 0);
 
         /**
          * Search for id and check for updated name
          */
-        $entity = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, $product->getId());
+        $entity = $this->entityManager->get(self::SCHEMA_PRODUCT, $product->getId());
         $this->assertEquals($entity->getName(), $newName);
     }
 
     /**
      * @test
      */
-    public function removeEntity()
+    public function remove()
     {
-        $removeResult = $this->entityManager->removeEntity(self::SCHEMA_PRODUCT, rand(1, 9999));
+        $removeResult = $this->entityManager->delete(self::SCHEMA_PRODUCT, rand(1, 9999));
         $this->assertFalse($removeResult);
 
         $data = array('name' => uniqid());
-        $newEntity = $this->entityManager->createEntity(self::SCHEMA_PRODUCT, $data);
+        $newEntity = $this->entityManager->create(self::SCHEMA_PRODUCT, $data);
 
         $entityId = $newEntity->getId();
 
-        $entity = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, $entityId);
+        $entity = $this->entityManager->get(self::SCHEMA_PRODUCT, $entityId);
         $this->assertEquals($data['name'], $entity->getName());
 
-        $removeResult = $this->entityManager->removeEntity(self::SCHEMA_PRODUCT, $entityId);
+        $removeResult = $this->entityManager->delete(self::SCHEMA_PRODUCT, $entityId);
         $this->assertTrue($removeResult);
 
-        $entity = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, $entityId);
+        $entity = $this->entityManager->get(self::SCHEMA_PRODUCT, $entityId);
         $this->assertFalse($entity);
     }
 
@@ -244,7 +248,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
             'dAte_of_bIrth' => "bar"
         );
 
-        $entity = $this->entityManager->createDetachedEntity(self::SCHEMA_PRODUCT, $data);
+        $entity = DoctrineEntityManager::createDetachedEntity(self::SCHEMA_PRODUCT, $data);
         $this->assertEquals($data['namE'], $entity->getName());
         $this->assertEquals($data['dAte_of_bIrth'], $entity->getDateOfBirth());
     }
