@@ -30,5 +30,10 @@ interface EntityManagerInterface
 
     public function updateEntity($resourceId, array $data);
 
-    public function removeEntity($resourceId);
+    /**
+     * @param string $entity
+     * @param int $resourceId
+     * @return bool
+     */
+    public function removeEntity($entity, $resourceId);
 }

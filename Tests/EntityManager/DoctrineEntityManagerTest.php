@@ -177,11 +177,25 @@ class DoctrineEntityManagerTest extends BaseTestCase
 
     /**
      * @test
-     * @expectedException \Exception
      */
     public function removeEntity()
     {
-        $this->entityManager->removeEntity(1);
+        $removeResult = $this->entityManager->removeEntity(self::SCHEMA_PRODUCT, rand(1, 9999));
+        $this->assertFalse($removeResult);
+
+        $data = array('name' => uniqid());
+        $newEntity = $this->entityManager->createEntity(self::SCHEMA_PRODUCT, $data);
+
+        $entityId = $newEntity->getId();
+
+        $entity = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, $entityId);
+        $this->assertEquals($data['name'], $entity->getName());
+
+        $removeResult = $this->entityManager->removeEntity(self::SCHEMA_PRODUCT, $entityId);
+        $this->assertTrue($removeResult);
+
+        $entity = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, $entityId);
+        $this->assertFalse($entity);
     }
 
     /**

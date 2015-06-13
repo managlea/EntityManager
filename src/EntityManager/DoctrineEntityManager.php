@@ -68,9 +68,22 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
         throw new \Exception('Method not implemented');
     }
 
-    public function removeEntity($resourceId)
+    /**
+     * @param string $entity
+     * @param int $resourceId
+     * @return bool
+     */
+    public function removeEntity($entity, $resourceId)
     {
-        throw new \Exception('Method not implemented');
+        $entityObject = $this->findEntity($entity, $resourceId);
+
+        if (!$entityObject) {
+            return false;
+        }
+
+        $this->remove($entityObject);
+        $this->flush();
+        return true;
     }
 
     /**
