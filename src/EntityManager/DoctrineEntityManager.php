@@ -63,9 +63,25 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
         return $entity;
     }
 
-    public function updateEntity($resourceId, array $data)
+    /**
+     * @param string $entity
+     * @param int $resourceId
+     * @param array $data
+     * @return bool
+     */
+    public function updateEntity($entity, $resourceId, array $data)
     {
-        throw new \Exception('Method not implemented');
+        $entityObject = $this->findEntity($entity, $resourceId);
+
+        if (!$entityObject) {
+            return false;
+        }
+
+        self::updateEntityFromData($entityObject, $data);
+
+        $this->flush();
+
+        return $entityObject;
     }
 
     /**
@@ -83,6 +99,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
 
         $this->remove($entityObject);
         $this->flush();
+
         return true;
     }
 
@@ -94,17 +111,34 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     public function createDetachedEntity($entity, array $data)
     {
         $detachedEntity = new $entity;
-        foreach ($data as $field => $value) {
-            $method = 'set' . $this->formatInputToMethodName($field);
-            if (method_exists($detachedEntity, $method)) {
-                $detachedEntity->$method($value);
-            }
-        }
+
+        self::updateEntityFromData($detachedEntity, $data);
 
         return $detachedEntity;
     }
 
-    private function formatInputToMethodName($input)
+    /**
+     * @param object $entity
+     * @param array $data
+     * @return mixed
+     */
+    public static function updateEntityFromData($entity, array $data)
+    {
+        foreach ($data as $field => $value) {
+            $method = 'set' . self::formatInputToMethodName($field);
+            if (method_exists($entity, $method)) {
+                $entity->$method($value);
+            }
+        }
+
+        return $entity;
+    }
+
+    /**
+     * @param string $input
+     * @return string
+     */
+    public static function formatInputToMethodName($input)
     {
         $methodName = implode('', array_map('ucfirst', explode('_', strtolower($input))));
 

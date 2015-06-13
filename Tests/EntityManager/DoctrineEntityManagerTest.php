@@ -168,11 +168,46 @@ class DoctrineEntityManagerTest extends BaseTestCase
 
     /**
      * @test
-     * @expectedException \Exception
      */
     public function updateEntity()
     {
-        $this->entityManager->updateEntity(1, array());
+        /**
+         * Update entity which does not exist
+         */
+        $updateResult = $this->entityManager->updateEntity(self::SCHEMA_PRODUCT, 1, array());
+        $this->assertFalse($updateResult);
+
+        /**
+         * Create entity
+         */
+        $product = $this->createProduct();
+
+        /**
+         * Search entity by name
+         */
+        $filters = array(
+            'name' => $product->getName()
+        );
+        $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, $filters);
+        $this->assertTrue(count($collection) == 1);
+
+        /**
+         * Update the name
+         */
+        $newName = uniqid();
+        $this->entityManager->updateEntity(self::SCHEMA_PRODUCT, $product->getId(), array('name' => $newName));
+
+        /**
+         * Search for original name
+         */
+        $collection = $this->entityManager->findEntityCollection(self::SCHEMA_PRODUCT, $filters);
+        $this->assertTrue(count($collection) == 0);
+
+        /**
+         * Search for id and check for updated name
+         */
+        $entity = $this->entityManager->findEntity(self::SCHEMA_PRODUCT, $product->getId());
+        $this->assertEquals($entity->getName(), $newName);
     }
 
     /**

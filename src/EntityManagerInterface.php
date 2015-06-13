@@ -2,7 +2,10 @@
 
 namespace Managlea\Component;
 
-
+/**
+ * Interface EntityManagerInterface
+ * @package Managlea\Component
+ */
 interface EntityManagerInterface
 {
     /**
@@ -28,7 +31,13 @@ interface EntityManagerInterface
      */
     public function createEntity($entity, array $data);
 
-    public function updateEntity($resourceId, array $data);
+    /**
+     * @param string $entity
+     * @param int $resourceId
+     * @param array $data
+     * @return mixed
+     */
+    public function updateEntity($entity, $resourceId, array $data);
 
     /**
      * @param string $entity
