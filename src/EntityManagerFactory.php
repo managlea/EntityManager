@@ -27,8 +27,13 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
 
         if (is_array($resourceConf)) {
             $entityManagerName = $resourceConf['entity_manager'];
+            if (!array_key_exists('object_name', $resourceConf)) {
+                throw new \Exception(sprintf('object_name configuration missing for resource: "%s"', $resourceName));
+            }
+            $objectName = $resourceConf['object_name'];
         } else {
             $entityManagerName = $defaultEntityManager;
+            $objectName = $resourceConf;
         }
 
         switch ($entityManagerName) {
@@ -48,8 +53,9 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
                 break;
             default:
                 throw new \Exception(sprintf('EntityManager of type %s not implemented', $entityManagerName));
-                break;
         }
+
+        $entityManager->setObjectName($objectName);
 
         return $entityManager;
     }

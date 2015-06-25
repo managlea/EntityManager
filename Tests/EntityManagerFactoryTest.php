@@ -31,8 +31,10 @@ class EntityManagerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $entityManager = EntityManagerFactory::createForResource('product');
         $this->assertTrue($entityManager instanceof EntityManagerInterface);
+        $this->assertEquals($entityManager->getObjectName(), 'Entities\Product');
 
         $entityManager = EntityManagerFactory::createForResource('bar');
         $this->assertTrue($entityManager instanceof EntityManagerInterface);
+        $this->assertEquals($entityManager->getObjectName(), 'Entities\Product');
     }
 }

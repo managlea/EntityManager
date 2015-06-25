@@ -13,6 +13,22 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     /**
      * {@inheritDoc}
      */
+    public function setObjectName($objectName)
+    {
+        $this->objectName = $objectName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getObjectName()
+    {
+        return $this->objectName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public static function initialize($conn, Configuration $config, EventManager $eventManager = null)
     {
         return new self(\Doctrine\ORM\EntityManager::create($conn, $config, $eventManager));
