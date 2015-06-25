@@ -11,6 +11,11 @@ use Managlea\Component\EntityManagerInterface;
 class DoctrineEntityManager extends EntityManagerDecorator implements EntityManagerInterface
 {
     /**
+     * @var
+     */
+    private $objectName;
+
+    /**
      * {@inheritDoc}
      */
     public function setObjectName($objectName)
