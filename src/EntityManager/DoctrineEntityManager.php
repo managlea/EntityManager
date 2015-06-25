@@ -11,27 +11,6 @@ use Managlea\Component\EntityManagerInterface;
 class DoctrineEntityManager extends EntityManagerDecorator implements EntityManagerInterface
 {
     /**
-     * @var
-     */
-    private $objectName;
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setObjectName($objectName)
-    {
-        $this->objectName = $objectName;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getObjectName()
-    {
-        return $this->objectName;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public static function initialize($conn, Configuration $config, EventManager $eventManager = null)

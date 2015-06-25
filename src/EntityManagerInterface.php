@@ -10,16 +10,6 @@ interface EntityManagerInterface
 {
     /**
      * @param string $objectName
-     * @return bool
-     */
-    public function setObjectName($objectName);
-
-    /**
-     * @return string|null
-     */
-    public function getObjectName();
-    /**
-     * @param string $objectName
      * @param int $id The identifier.
      * @return mixed
      */

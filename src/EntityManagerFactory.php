@@ -5,7 +5,6 @@ namespace Managlea\Component;
 
 use Doctrine\ORM\Tools\Setup;
 use Managlea\Component\EntityManager\DoctrineEntityManager;
-use Symfony\Component\Yaml\Yaml;
 
 class EntityManagerFactory implements EntityManagerFactoryInterface
 {
@@ -16,25 +15,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
      */
     public static function createForResource($resourceName)
     {
-        $conf = self::getConfig();
-        $defaultEntityManager = $conf['default_entity_manager'];
-
-        if (!array_key_exists($resourceName, $conf['mapping'])) {
-            throw new \Exception(sprintf('Mapping configuration missing for resource: "%s"', $resourceName));
-        }
-
-        $resourceConf = $conf['mapping'][$resourceName];
-
-        if (is_array($resourceConf)) {
-            $entityManagerName = $resourceConf['entity_manager'];
-            if (!array_key_exists('object_name', $resourceConf)) {
-                throw new \Exception(sprintf('object_name configuration missing for resource: "%s"', $resourceName));
-            }
-            $objectName = $resourceConf['object_name'];
-        } else {
-            $entityManagerName = $defaultEntityManager;
-            $objectName = $resourceConf;
-        }
+        $entityManagerName = ResourceMapper::getEntityManager($resourceName);
 
         switch ($entityManagerName) {
             case 'DoctrineEntityManager':
@@ -55,15 +36,6 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
                 throw new \Exception(sprintf('EntityManager of type %s not implemented', $entityManagerName));
         }
 
-        $entityManager->setObjectName($objectName);
-
         return $entityManager;
-    }
-
-    private static function getConfig()
-    {
-        $configValues = Yaml::parse(file_get_contents(__DIR__ . '/../config/resource_mapping.yml'));
-
-        return $configValues;
     }
 }
