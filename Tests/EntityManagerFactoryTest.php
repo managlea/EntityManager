@@ -16,14 +16,25 @@ class EntityManagerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         EntityManagerFactory::createForResource('foo');
     }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     */
+    public function createFromResourceNameNoObjectName()
+    {
+        EntityManagerFactory::createForResource('baz');
+    }
+
     /**
      * @test
      * @expectedException \Exception
      */
     public function createFromResourceNameNotImplemented()
     {
-        EntityManagerFactory::createForResource('baz');
+        EntityManagerFactory::createForResource('zoo');
     }
+
     /**
      * @test
      */
