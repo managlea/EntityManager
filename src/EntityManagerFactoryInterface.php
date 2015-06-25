@@ -9,5 +9,5 @@ interface EntityManagerFactoryInterface
      * @param string $resourceName
      * @return EntityManagerInterface
      */
-    public static function createFromResourceName($resourceName);
+    public static function createForResource($resourceName);
 }

@@ -14,7 +14,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
      * @return EntityManagerInterface
      * @throws \Exception
      */
-    public static function createFromResourceName($resourceName)
+    public static function createForResource($resourceName)
     {
         $conf = self::getConfig();
         $defaultEntityManager = $conf['default_entity_manager'];
@@ -49,10 +49,6 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
             default:
                 throw new \Exception(sprintf('EntityManager of type %s not implemented', $entityManagerName));
                 break;
-        }
-
-        if (!$entityManager instanceof EntityManagerInterface) {
-            throw new \Exception(sprintf('$entityManager not instance of EntityManagerInterface'));
         }
 
         return $entityManager;
