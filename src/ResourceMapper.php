@@ -9,7 +9,7 @@ use Symfony\Component\Yaml\Yaml;
  * Class ResourceMapper
  * @package Managlea\Component
  */
-class ResourceMapper
+final class ResourceMapper
 {
     /**
      * @var ResourceMapper The reference to *ResourceMapper* instance of this class
@@ -33,11 +33,11 @@ class ResourceMapper
      */
     private static function getInstance()
     {
-        if (null === static::$instance) {
-            static::$instance = new static();
+        if (null === self::$instance) {
+            self::$instance = new self();
         }
 
-        return static::$instance;
+        return self::$instance;
     }
 
     /**
