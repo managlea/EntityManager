@@ -1,0 +1,11 @@
+default_entity_manager: DoctrineEntityManager
+mapping:
+  product:
+    entity_manager: DoctrineEntityManager
+    object_name: Entities\Product
+  bar: Entities\Product
+  baz:
+    entity_manager: DoctrineEntityManager
+  zoo:
+    entity_manager: Zoo
+    object_name: Entities\Product

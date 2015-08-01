@@ -19,7 +19,8 @@
     }
   },
   "require": {
-    "doctrine/orm": "2.5.0"
+    "doctrine/orm": "2.5.0",
+    "symfony/config": "~2.5"
   },
   "require-dev": {
     "codeclimate/php-test-reporter": "dev-master"
