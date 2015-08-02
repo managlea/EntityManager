@@ -26,6 +26,6 @@
   },
   "require": {
     "doctrine/orm": "2.5.0",
-    "managlea/resource-mapper": "*"
+    "managlea/resource-mapper": "dev-master"
   }
 }
