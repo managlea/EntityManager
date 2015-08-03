@@ -14,16 +14,7 @@ class EntityManagerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function createFromResourceNameNoMapping()
     {
-        EntityManagerFactory::createForResource('foo');
-    }
-
-    /**
-     * @test
-     * @expectedException \Exception
-     */
-    public function createFromResourceNameNotImplemented()
-    {
-        EntityManagerFactory::createForResource('zoo');
+        EntityManagerFactory::create('foo');
     }
 
     /**
@@ -31,13 +22,7 @@ class EntityManagerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function createFromResourceName()
     {
-        $entityManager = EntityManagerFactory::createForResource('product');
-        $this->assertTrue($entityManager instanceof EntityManagerInterface);
-
-        $entityManager = EntityManagerFactory::createForResource('bar');
-        $this->assertTrue($entityManager instanceof EntityManagerInterface);
-
-        $entityManager = EntityManagerFactory::createForResource('baz');
+        $entityManager = EntityManagerFactory::create('DoctrineEntityManager');
         $this->assertTrue($entityManager instanceof EntityManagerInterface);
     }
 }

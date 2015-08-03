@@ -9,14 +9,12 @@ use Managlea\Component\EntityManager\DoctrineEntityManager;
 class EntityManagerFactory implements EntityManagerFactoryInterface
 {
     /**
-     * @param string $resourceName
+     * @param string $entityManagerName
      * @return EntityManagerInterface
      * @throws \Exception
      */
-    public static function createForResource($resourceName)
+    public static function create($entityManagerName)
     {
-        $entityManagerName = ResourceMapper::getEntityManager($resourceName);
-
         switch ($entityManagerName) {
             case 'DoctrineEntityManager':
                 $isDevMode = true;

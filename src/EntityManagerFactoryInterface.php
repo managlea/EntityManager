@@ -6,8 +6,8 @@ namespace Managlea\Component;
 interface EntityManagerFactoryInterface
 {
     /**
-     * @param string $resourceName
+     * @param string $entityManagerName
      * @return EntityManagerInterface
      */
-    public static function createForResource($resourceName);
+    public static function create($entityManagerName);
 }
