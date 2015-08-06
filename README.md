@@ -5,7 +5,12 @@ Wrapped on top of different database connectors to provide general interface. Cu
 
 ##Basic usage (DoctrineEntityManager):
 ```php
+
+// Create directly
 $entityManager = DoctrineEntityManager::initialize($dbParams, $config);
+
+// Create using factory (recommended)
+$entityManager = EntityManagerFactory::create('DoctrineEntityManager');
 
 // Get single entity
 $entity = $entityManager->get('Entities\Product', 1);
