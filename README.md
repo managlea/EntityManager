@@ -5,7 +5,6 @@ Wrapped on top of different database connectors to provide general interface. Cu
 
 ##Basic usage (DoctrineEntityManager):
 ```php
-
 // Create directly
 $entityManager = DoctrineEntityManager::initialize($dbParams, $config);
 
