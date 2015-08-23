@@ -13,7 +13,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
      * @return EntityManagerInterface
      * @throws \Exception
      */
-    public static function create($entityManagerName)
+    public function create($entityManagerName)
     {
         switch ($entityManagerName) {
             case 'DoctrineEntityManager':
