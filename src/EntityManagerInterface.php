@@ -11,9 +11,10 @@ interface EntityManagerInterface
     /**
      * @param string $objectName
      * @param int $id The identifier.
+     * @param array $criteria
      * @return mixed
      */
-    public function get($objectName, $id);
+    public function get($objectName, $id, array $criteria = array());
 
     /**
      * @param string $objectName

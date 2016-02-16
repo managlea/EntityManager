@@ -21,15 +21,22 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     /**
      * {@inheritDoc}
      */
-    public function get($objectName, $id)
+    public function get($objectName, $id, array $criteria = array())
     {
         $repository = $this->getRepository($objectName);
-        $objectName = $repository->find($id);
-        if (!$objectName) {
+
+        if (empty($criteria)) {
+            $entityObject = $repository->find($id);
+        } else {
+            $criteria['id'] = $id;
+            $entityObject = $repository->findOneBy($criteria);
+        }
+
+        if (!$entityObject) {
             return false;
         }
 
-        return $objectName;
+        return $entityObject;
     }
 
     /**
