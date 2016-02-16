@@ -14,6 +14,9 @@ $entityManager = EntityManagerFactory::create('DoctrineEntityManager');
 // Get single entity
 $entity = $entityManager->get('Entities\Product', 1);
 
+// Get single entity (with additional criterias)
+$entity = $entityManager->get('Entities\Product', 1, array('user_id' => 2));
+
 // Get collection
 $entityCollection = $entityManager->getCollection('Entities\Product');
 

@@ -25,12 +25,9 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     {
         $repository = $this->getRepository($objectName);
 
-        if (empty($criteria))
-        {
+        if (empty($criteria)) {
             $entityObject = $repository->find($id);
-        }
-        else
-        {
+        } else {
             $criteria['id'] = $id;
             $entityObject = $repository->findOneBy($criteria);
         }
