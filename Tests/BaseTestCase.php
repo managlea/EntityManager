@@ -64,6 +64,7 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     {
         $product = new Product();
         $product->setName(rand(1, 9) . uniqid());
+        $product->setDateOfBirth('1970-01-01');
 
         $this->entityManager->persist($product);
         $this->entityManager->flush();

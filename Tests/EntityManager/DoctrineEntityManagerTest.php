@@ -38,6 +38,11 @@ class DoctrineEntityManagerTest extends BaseTestCase
     {
         $entity = $this->entityManager->get(self::SCHEMA_PRODUCT, -1);
         $this->assertEquals(false, $entity);
+
+        $product = $this->createProduct();
+        $criteria = array('dateOfBirth' => '1970-01-02');
+        $entity = $this->entityManager->get(self::SCHEMA_PRODUCT, $product->getId(), $criteria);
+        $this->assertEquals(false, $entity);
     }
 
     /**
@@ -47,7 +52,16 @@ class DoctrineEntityManagerTest extends BaseTestCase
     {
         $product = $this->createProduct();
         $entity = $this->entityManager->get(self::SCHEMA_PRODUCT, $product->getId());
+        $this->assertEquals($product->getName(), $entity->getName());
 
+        $product = $this->createProduct();
+        $criteria = array();
+        $entity = $this->entityManager->get(self::SCHEMA_PRODUCT, $product->getId(), $criteria);
+        $this->assertEquals($product->getName(), $entity->getName());
+
+        $product = $this->createProduct();
+        $criteria = array('dateOfBirth' => '1970-01-01');
+        $entity = $this->entityManager->get(self::SCHEMA_PRODUCT, $product->getId(), $criteria);
         $this->assertEquals($product->getName(), $entity->getName());
     }
 
