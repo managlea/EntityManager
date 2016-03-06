@@ -1,0 +1,13 @@
+language: php
+php:
+  - '7.0'
+services:
+  - mysql
+before_script:
+  - composer self-update
+  - composer install
+  - mysql -e 'create database test;'
+script:
+  - phpunit --coverage-clover build/logs/clover.xml
+after_script:
+  - vendor/bin/test-reporter
