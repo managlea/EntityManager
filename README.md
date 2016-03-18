@@ -3,7 +3,7 @@
 [![Code Climate](https://codeclimate.com/github/managlea/EntityManager/badges/gpa.svg)](https://codeclimate.com/github/managlea/EntityManager) [![Test Coverage](https://codeclimate.com/github/managlea/EntityManager/badges/coverage.svg)](https://codeclimate.com/github/managlea/EntityManager/coverage)  
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/fccb20e0-d90c-4801-a534-88845faea1ec/mini.png)](https://insight.sensiolabs.com/projects/fccb20e0-d90c-4801-a534-88845faea1ec)  
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/1caaead12a1b4cdd8c66ebc4afee9ad9)](https://www.codacy.com/app/Managlea/EntityManager)  
-[![Build Status](https://travis-ci.org/managlea/EntityManager.svg?branch=master)](https://travis-ci.org/managlea/EntityManager)
+[![Build Status](https://travis-ci.org/managlea/EntityManager.svg?branch=master)](https://travis-ci.org/managlea/EntityManager) [ ![Codeship Status for managlea/EntityManager](https://codeship.com/projects/7acdf9d0-cf5f-0133-71d1-52aba3b897dd/status?branch=master)](https://codeship.com/projects/141212)
 
 Wrapped on top of different database connectors to provide general interface. Currently supports only Doctrine ORM.
 
