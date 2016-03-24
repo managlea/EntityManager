@@ -7,6 +7,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Managlea\Component\EntityManager\DoctrineEntityManager;
 use Managlea\Tests\Models\Product;
+use Symfony\Component\Yaml\Yaml;
 
 class BaseTestCase extends \PHPUnit_Framework_TestCase
 {
@@ -27,15 +28,10 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $isDevMode = true;
         $paths = array(__DIR__ . "/Models");
 
-        $dbParams = array(
-            'driver' => 'pdo_mysql',
-            'user' => 'root',
-            'password' => '',
-            'dbname' => 'test',
-        );
+        $connectionConfig = $this->getConfig();
 
         $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-        $this->entityManager = DoctrineEntityManager::initialize($dbParams, $config);
+        $this->entityManager = DoctrineEntityManager::initialize($connectionConfig['parameters'], $config);
 
         $this->schemaTool = new SchemaTool($this->entityManager);
 
@@ -46,6 +42,11 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
         $this->schemaTool->dropSchema($this->getSchemaClasses());
+    }
+
+    public function getConfig()
+    {
+        return Yaml::parse(file_get_contents(__DIR__ . '/../config/database.yml'));
     }
 
     private function getSchemaClasses()
