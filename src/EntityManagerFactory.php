@@ -5,6 +5,7 @@ namespace Managlea\Component;
 
 use Doctrine\ORM\Tools\Setup;
 use Managlea\Component\EntityManager\DoctrineEntityManager;
+use Symfony\Component\Yaml\Yaml;
 
 class EntityManagerFactory implements EntityManagerFactoryInterface
 {
@@ -20,15 +21,10 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
                 $isDevMode = true;
                 $paths = array(__DIR__ . "/Models");
 
-                $dbParams = array(
-                    'driver' => 'pdo_mysql',
-                    'user' => 'root',
-                    'password' => '',
-                    'dbname' => 'test',
-                );
-
+                $dbParams = Yaml::parse(file_get_contents(__DIR__ . '/../config/database.yml'));
                 $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-                $entityManager = DoctrineEntityManager::initialize($dbParams, $config);
+
+                $entityManager = DoctrineEntityManager::initialize($dbParams['parameters'], $config);
                 break;
             default:
                 throw new \Exception(sprintf('EntityManager of type %s not implemented', $entityManagerName));
