@@ -23,14 +23,15 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
 
     const SCHEMA_PRODUCT = 'Managlea\Tests\Models\Product';
 
+    /**
+     * @throws \Doctrine\ORM\Tools\ToolsException
+     */
     public function setUp()
     {
-        $isDevMode = true;
         $paths = array(__DIR__ . "/Models");
+        $config = Setup::createAnnotationMetadataConfiguration($paths, true);
 
         $connectionConfig = $this->getConfig();
-
-        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
         $this->entityManager = DoctrineEntityManager::initialize($connectionConfig['parameters'], $config);
 
         $this->schemaTool = new SchemaTool($this->entityManager);

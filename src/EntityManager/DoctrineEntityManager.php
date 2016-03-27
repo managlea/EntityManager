@@ -5,6 +5,7 @@ namespace Managlea\Component\EntityManager;
 
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\ORM\Configuration;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Common\EventManager;
 use Managlea\Component\EntityManagerInterface;
 
@@ -15,7 +16,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
      */
     public static function initialize($conn, Configuration $config, EventManager $eventManager = null)
     {
-        return new self(\Doctrine\ORM\EntityManager::create($conn, $config, $eventManager));
+        return new self(EntityManager::create($conn, $config, $eventManager));
     }
 
     /**
@@ -25,12 +26,8 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     {
         $repository = $this->getRepository($objectName);
 
-        if (empty($criteria)) {
-            $entityObject = $repository->find($id);
-        } else {
-            $criteria['id'] = $id;
-            $entityObject = $repository->findOneBy($criteria);
-        }
+        $criteria['id'] = $id;
+        $entityObject = $repository->findOneBy($criteria);
 
         if (!$entityObject) {
             return false;
