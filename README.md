@@ -3,7 +3,8 @@
 [![Code Climate](https://codeclimate.com/github/managlea/EntityManager/badges/gpa.svg)](https://codeclimate.com/github/managlea/EntityManager) [![Test Coverage](https://codeclimate.com/github/managlea/EntityManager/badges/coverage.svg)](https://codeclimate.com/github/managlea/EntityManager/coverage)  
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/fccb20e0-d90c-4801-a534-88845faea1ec/mini.png)](https://insight.sensiolabs.com/projects/fccb20e0-d90c-4801-a534-88845faea1ec)  
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/1caaead12a1b4cdd8c66ebc4afee9ad9)](https://www.codacy.com/app/Managlea/EntityManager)  
-[![Build Status](https://travis-ci.org/managlea/EntityManager.svg?branch=master)](https://travis-ci.org/managlea/EntityManager) [![Circle CI](https://circleci.com/gh/managlea/EntityManager/tree/master.svg?style=svg)](https://circleci.com/gh/managlea/EntityManager/tree/master)
+[![Build Status](https://travis-ci.org/managlea/EntityManager.svg?branch=master)](https://travis-ci.org/managlea/EntityManager) [![Circle CI](https://circleci.com/gh/managlea/EntityManager/tree/master.svg?style=svg)](https://circleci.com/gh/managlea/EntityManager/tree/master)  
+[![PHP-Eye](http://php-eye.com/badge/managlea/entity-manager/tested.svg)](http://php-eye.com/package/managlea/entity-manager)
 
 Wrapped on top of different database connectors to provide general interface. Currently supports only Doctrine ORM.
 
