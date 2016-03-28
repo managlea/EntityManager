@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Managlea\Component\EntityManager;
 
 
@@ -14,7 +16,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     /**
      * {@inheritDoc}
      */
-    public static function initialize($conn, Configuration $config, EventManager $eventManager = null)
+    public static function initialize($conn, Configuration $config, EventManager $eventManager = null) : self
     {
         return new self(EntityManager::create($conn, $config, $eventManager));
     }
@@ -22,7 +24,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     /**
      * {@inheritDoc}
      */
-    public function get($objectName, $id, array $criteria = array())
+    public function get(string $objectName, int $id, array $criteria = array())
     {
         $repository = $this->getRepository($objectName);
 
@@ -39,7 +41,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     /**
      * {@inheritDoc}
      */
-    public function getCollection($objectName, array $filters = array(), $limit = 20, $offset = 0, $order = null)
+    public function getCollection(string $objectName, array $filters = array(), int $limit = 20, int $offset = 0, array $order = null) : array
     {
         $repository = $this->getRepository($objectName);
         $collection = $repository->findBy($filters, $order, $limit, $offset);
@@ -50,7 +52,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     /**
      * {@inheritDoc}
      */
-    public function create($objectName, array $data)
+    public function create(string $objectName, array $data)
     {
         $detachedEntity = self::createDetachedEntity($objectName, $data);
 
@@ -64,7 +66,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     /**
      * {@inheritDoc}
      */
-    public function update($objectName, $id, array $data)
+    public function update(string $objectName, int $id, array $data)
     {
         return $this->executeActionOnEntity('update', $objectName, $id, $data);
     }
@@ -72,7 +74,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
     /**
      * {@inheritDoc}
      */
-    public function delete($objectName, $id)
+    public function delete(string $objectName, int $id) : bool
     {
         return (bool)$this->executeActionOnEntity('remove', $objectName, $id);
     }
@@ -84,7 +86,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
      * @param array $data
      * @return mixed
      */
-    private function executeActionOnEntity($method, $objectName, $id, array $data = null)
+    private function executeActionOnEntity(string $method, string $objectName, int $id, array $data = null)
     {
         $entityObject = $this->get($objectName, $id);
 
@@ -114,7 +116,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
      * @param array $data
      * @return mixed
      */
-    public static function createDetachedEntity($objectName, array $data)
+    public static function createDetachedEntity(string $objectName, array $data)
     {
         $detachedEntity = new $objectName;
 
@@ -147,7 +149,7 @@ class DoctrineEntityManager extends EntityManagerDecorator implements EntityMana
      * @param string $input
      * @return string
      */
-    public static function formatStringToMethodName($input)
+    public static function formatStringToMethodName(string $input) : string
     {
         $methodName = implode('', array_map('ucfirst', explode('_', strtolower($input))));
 

@@ -162,7 +162,7 @@ class DoctrineEntityManagerTest extends BaseTestCase
                 'name' => $orderType
             );
 
-            $collection = $this->entityManager->getCollection(self::SCHEMA_PRODUCT, array(), 1, null,
+            $collection = $this->entityManager->getCollection(self::SCHEMA_PRODUCT, array(), 1, 0,
                 $order);
             $result = current($collection);
 
