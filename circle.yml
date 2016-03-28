@@ -5,3 +5,7 @@ dependencies:
   pre:
     - "mysql -u root -e 'create database test;'"
     - "ln -s /var/run/mysqld/mysqld.sock /tmp/mysql.sock"
+test:
+  override:
+    - mkdir -p $CIRCLE_TEST_REPORTS/phpunit
+    - phpunit --log-junit $CIRCLE_TEST_REPORTS/phpunit/junit.xml

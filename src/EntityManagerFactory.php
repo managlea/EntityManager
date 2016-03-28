@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Managlea\Component;
 
 
@@ -14,7 +16,7 @@ class EntityManagerFactory implements EntityManagerFactoryInterface
      * @return EntityManagerInterface
      * @throws \Exception
      */
-    public function create($entityManagerName)
+    public function create(string $entityManagerName) : EntityManagerInterface
     {
         switch ($entityManagerName) {
             case 'DoctrineEntityManager':
