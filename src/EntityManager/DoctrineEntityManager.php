@@ -6,19 +6,18 @@ namespace Managlea\Component\EntityManager;
 
 
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
-use Doctrine\ORM\Configuration;
-use Doctrine\ORM\EntityManager;
-use Doctrine\Common\EventManager;
+use Doctrine\ORM\EntityManagerInterface as DoctrineEntityManagerInterface;
 use Managlea\Component\EntityManagerInterface;
 
 class DoctrineEntityManager extends EntityManagerDecorator implements EntityManagerInterface
 {
     /**
-     * {@inheritDoc}
+     * DoctrineEntityManager constructor.
+     * @param DoctrineEntityManagerInterface $wrapped
      */
-    public static function initialize($conn, Configuration $config, EventManager $eventManager = null) : self
+    public function __construct(DoctrineEntityManagerInterface $wrapped)
     {
-        return new self(EntityManager::create($conn, $config, $eventManager));
+        parent::__construct($wrapped);
     }
 
     /**

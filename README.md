@@ -11,37 +11,37 @@ Wrapped on top of different database connectors to provide general interface. Cu
 ##Basic usage (DoctrineEntityManager):
 ```php
 // Create directly
-$entityManager = DoctrineEntityManager::initialize($dbParams, $config);
+$em = new DoctrineEntityManager($entityManager);
 
 // Create using factory (recommended)
-$entityManager = EntityManagerFactory::create('DoctrineEntityManager');
+$em = new EntityManagerFactory($containerBuilder)->create('doctrine_entity_manager');
 
 // Get single entity
-$entity = $entityManager->get('Entities\Product', 1);
+$entity = $em->get('Entities\Product', 1);
 
 // Get single entity (with additional criterias)
-$entity = $entityManager->get('Entities\Product', 1, array('user_id' => 2));
+$entity = $em->get('Entities\Product', 1, array('user_id' => 2));
 
 // Get collection
-$entityCollection = $entityManager->getCollection('Entities\Product');
+$entityCollection = $em->getCollection('Entities\Product');
 
 // Create new entity
-$newEntity = $entityManager->create('Entities\Product', array('name' => 'foo'));
+$newEntity = $em->create('Entities\Product', array('name' => 'foo'));
 
 // Update newly created entity
-$updatedEntity = $entityManager->update('Entities\Product', $newEntity->getId(), array('name' => 'bar'));
+$updatedEntity = $em->update('Entities\Product', $newEntity->getId(), array('name' => 'bar'));
 
 // Delete update entity
-$entityManager->delete('Entities\Product', $updatedEntity->getId());
+$em->delete('Entities\Product', $updatedEntity->getId());
 ```
 
 As all existing Doctrine functionality is left intact you are also able to use all Doctrine ORM build in methods:
 ```php
-$entityManager = DoctrineEntityManager::initialize($dbParams, $config);
+$em = new DoctrineEntityManager($entityManager);
 
 $user = new User;
 $user->setName('Mr.Right');
 
-$entityManager->persist($user);
-$entityManager->flush();
+$em->persist($user);
+$em->flush();
 ```

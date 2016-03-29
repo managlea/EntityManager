@@ -3,10 +3,13 @@
 namespace Managlea\Tests;
 
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Managlea\Component\EntityManager\DoctrineEntityManager;
+use Managlea\Component\EntityManagerFactory;
 use Managlea\Tests\Models\Product;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Yaml\Yaml;
 
 class BaseTestCase extends \PHPUnit_Framework_TestCase
@@ -32,8 +35,9 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         $config = Setup::createAnnotationMetadataConfiguration($paths, true);
 
         $connectionConfig = $this->getConfig();
-        $this->entityManager = DoctrineEntityManager::initialize($connectionConfig['parameters'], $config);
+        $entityManager = EntityManager::create($connectionConfig['parameters'], $config);
 
+        $this->entityManager = new DoctrineEntityManager($entityManager);
         $this->schemaTool = new SchemaTool($this->entityManager);
 
         $this->schemaTool->dropSchema($this->getSchemaClasses());
@@ -85,5 +89,21 @@ class BaseTestCase extends \PHPUnit_Framework_TestCase
         }
 
         return $products;
+    }
+
+    protected function getEntityManagerFactory()
+    {
+        $container = $this->getContainer();
+        return new EntityManagerFactory($container);
+    }
+
+    private function getContainer()
+    {
+        $container = new ContainerBuilder();
+        $container
+            ->register('doctrine_entity_manager', 'Managlea\Component\EntityManager\DoctrineEntityManager')
+            ->addArgument($this->entityManager);
+
+        return $container;
     }
 }

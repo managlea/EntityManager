@@ -3,11 +3,10 @@
 namespace Managlea\Tests;
 
 
-use Managlea\Component\EntityManagerFactory;
 use Managlea\Component\EntityManagerFactoryInterface;
 use Managlea\Component\EntityManagerInterface;
 
-class EntityManagerFactoryTest extends \PHPUnit_Framework_TestCase
+class EntityManagerFactoryTest extends BaseTestCase
 {
     /**
      * @test
@@ -15,7 +14,19 @@ class EntityManagerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function createFromResourceNameNoMapping()
     {
-        $entityManagerFactory = new EntityManagerFactory;
+        $entityManagerFactory = $this->getEntityManagerFactory();
+        $entityManagerFactory->create('foo');
+    }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     */
+    public function createFromResourceNameNoService()
+    {
+        $entityManagerFactory = $this->getEntityManagerFactory();
+        $this->assertTrue($entityManagerFactory instanceof EntityManagerFactoryInterface);
+
         $entityManagerFactory->create('foo');
     }
 
@@ -24,10 +35,10 @@ class EntityManagerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function createFromResourceName()
     {
-        $entityManagerFactory = new EntityManagerFactory;
+        $entityManagerFactory = $this->getEntityManagerFactory();
         $this->assertTrue($entityManagerFactory instanceof EntityManagerFactoryInterface);
 
-        $entityManager = $entityManagerFactory->create('DoctrineEntityManager');
+        $entityManager = $entityManagerFactory->create('doctrine_entity_manager');
         $this->assertTrue($entityManager instanceof EntityManagerInterface);
     }
 }

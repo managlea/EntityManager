@@ -1,37 +1,33 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Managlea\Component;
 
 
-use Doctrine\ORM\Tools\Setup;
-use Managlea\Component\EntityManager\DoctrineEntityManager;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class EntityManagerFactory implements EntityManagerFactoryInterface
 {
     /**
-     * @param string $entityManagerName
+     * @var ContainerInterface
+     */
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @param string $entityManagerName service name for entityManager
      * @return EntityManagerInterface
      * @throws \Exception
      */
     public function create(string $entityManagerName) : EntityManagerInterface
     {
-        switch ($entityManagerName) {
-            case 'DoctrineEntityManager':
-                $isDevMode = true;
-                $paths = array(__DIR__ . "/Models");
-
-                $dbParams = Yaml::parse(file_get_contents(__DIR__ . '/../config/database.yml'));
-                $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-
-                $entityManager = DoctrineEntityManager::initialize($dbParams['parameters'], $config);
-                break;
-            default:
-                throw new \Exception(sprintf('EntityManager of type %s not implemented', $entityManagerName));
-        }
-
+        $entityManager = $this->container->get($entityManagerName);
+        
         return $entityManager;
     }
 }
